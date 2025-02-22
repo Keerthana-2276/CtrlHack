@@ -1,0 +1,24 @@
+from flask import Flask, render_template, jsonify, request
+import subprocess
+import os
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    # Render index.html from the templates folder.
+    return render_template('index.html')
+
+@app.route('/start-exercise', methods=['POST'])
+def start_exercise():
+    try:
+        # Use subprocess to run camera4.py.
+        # This assumes that 'python' is the correct command to run your script.
+        # If needed, you can provide the full path.
+        subprocess.Popen(["python", "camera4.py"])
+        return jsonify({"status": "success", "message": "Exercise tracking started!"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
+if __name__ == '__main__':
+    app.run(debug=True)
