@@ -1,6 +1,8 @@
 from flask import Flask, render_template, redirect, url_for
 import subprocess
 import os
+import sys
+
 
 # Initialize Flask app
 app = Flask(__name__, static_url_path='/static', static_folder='static', template_folder='templates')
@@ -26,14 +28,17 @@ def contact():
     return render_template('contact.html', contact_data=contact_data)
 
 # Start Exercise Route (Runs camera4.py)
+
+
 @app.route('/start-exercise')
 def start_exercise():
     try:
-        subprocess.Popen(["python", "camera4.py"])
+        subprocess.Popen([sys.executable, "camera4.py"], creationflags=subprocess.DETACHED_PROCESS)
     except Exception as e:
         print(f"Error launching camera4.py: {e}")
     return redirect(url_for('home'))
 
 # Run Flask App
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=False)
+
